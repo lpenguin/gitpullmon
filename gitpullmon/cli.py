@@ -5,22 +5,22 @@ import sys
 
 from git import Repo, Remote, Reference, Commit
 
-def has_new_commit(repo_path, branch_name, remote_name)->bool:
+def has_new_commit(repo_path, branch_name, remote_name):
     repo = Repo(repo_path)
-    master:Reference = repo.heads[branch_name]
+    master = repo.heads[branch_name]
     cur_commit = master.commit
-    print(f'Current commit in {branch_name} branch: {cur_commit}')
+    print('Current commit in {branch_name} branch: {cur_commit}'.format(**locals()))
 
-    origin: Remote = repo.remotes[remote_name]
-    print(f'Refreshing the repository remote: {remote_name}, {list(origin.urls)[0]}')
+    origin = repo.remotes[remote_name]
+    print('Refreshing the repository remote: {remote_name}'.format(**locals()))
     origin.pull()
     
     last_commit = master.commit
-    print(f'Latest commit in the {remote_name}/{branch_name}: {last_commit}')
+    print('Latest commit in the {remote_name}/{branch_name}: {last_commit}'.format(**locals()))
     
     return last_commit != cur_commit
 
-def execute_command(command: str):
+def execute_command(command):
     command_args = shlex.split(command)
     subprocess.call(command_args, 
         stdin=sys.stdin, 
@@ -38,7 +38,7 @@ def main():
 
 
     if has_new_commit(args.repository, args.branch_name, args.remote_name):
-        print(f'Repository changed, executing command: {args.command}')
+        print('Repository changed, executing command: {}'.format(args.command))
         execute_command(args.command)
     else:
         print('Nothing changed')
